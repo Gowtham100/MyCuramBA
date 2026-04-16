@@ -243,7 +243,7 @@ export default function App() {
           <CardContent>
             <form className="space-y-5" onSubmit={handleSubmit}>
               <div className="space-y-2">
-                <Label htmlFor="featureName">Feature Name</Label>
+                <Label htmlFor="featureName">Feature Name *</Label>
                 <Input
                   id="featureName"
                   value={form.featureName}
@@ -253,7 +253,7 @@ export default function App() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="productArea">Product Area</Label>
+                <Label htmlFor="productArea">Product Area *</Label>
                 <Input
                   id="productArea"
                   value={form.productArea}
@@ -263,7 +263,7 @@ export default function App() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="primaryUser">Primary User</Label>
+                <Label htmlFor="primaryUser">Primary User *</Label>
                 <Input
                   id="primaryUser"
                   value={form.primaryUser}
@@ -283,7 +283,7 @@ export default function App() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="featureSummary">Feature Summary</Label>
+                <Label htmlFor="featureSummary">Feature Summary *</Label>
                 <Textarea
                   id="featureSummary"
                   value={form.featureSummary}
