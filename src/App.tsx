@@ -45,6 +45,7 @@ const initialForm: FeatureForm = {
   keyEntities: "",
 }
 
+
 function toList(value: string) {
   return value
     .split("\n")
@@ -119,24 +120,6 @@ function LoadingWorkflow({
 export default function App() {
   const [form, setForm] = useState<FeatureForm>(initialForm)
   const [result, setResult] = useState<string>("")
-  const [isLoading, setIsLoading] = useState(false)
-  const [loadingStep, setLoadingStep] = useState(0)
-  const [loadingMessage, setLoadingMessage] = useState("")
-
-  const loadingSteps = [
-    {
-      title: "Intake + Curam Expert",
-      description: "Analyzing the feature request and identifying Curam-specific context.",
-    },
-    {
-      title: "Delivery Designer",
-      description: "Generating user stories, acceptance criteria, and test cases.",
-    },
-    {
-      title: "Formatter",
-      description: "Formatting the final output for review.",
-    },
-  ]
 
   const payload = useMemo(() => {
     return {
@@ -163,8 +146,13 @@ export default function App() {
     setForm((prev) => ({ ...prev, [key]: value }))
   }
 
+  const [isLoading, setIsLoading] = useState(false)
+  const [loadingStep, setLoadingStep] = useState(0)
+  const [loadingMessage, setLoadingMessage] = useState("")
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    
 
     if (
       !form.featureName.trim() ||
@@ -225,7 +213,20 @@ export default function App() {
     }
   }
 
-
+  const loadingSteps = [
+    {
+      title: "Intake + Curam Expert",
+      description: "Analyzing the feature request and identifying Curam-specific context.",
+    },
+    {
+      title: "Delivery Designer",
+      description: "Generating user stories, acceptance criteria, and test cases.",
+    },
+    {
+      title: "Formatter",
+      description: "Formatting the final output for review.",
+    },
+  ]
 
   return (
     <main className="min-h-screen bg-slate-50 p-6">
