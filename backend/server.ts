@@ -1,47 +1,50 @@
-import dotenv from "dotenv";
 import express from "express";
+import OpenAI from "openai";
 import cors from "cors";
-import { runWorkflow } from "../src/agent/curamWorkflow.ts";
-
+import dotenv from "dotenv";
 dotenv.config();
 
 const app = express();
-const port = 3001;
-
 app.use(cors());
 app.use(express.json());
 
-app.get("/api/health", (_req, res) => {
-  res.json({
-    ok: true,
-    hasKey: !!process.env.OPENAI_API_KEY,
-  });
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
-app.post("/api/generate", async (req, res) => {
+app.post("/api/chat", async (req, res) => {
   try {
-    const payload = req.body;
+    const { messages } = req.body;
 
-    const result = await runWorkflow({
-      input_as_text: JSON.stringify(payload, null, 2),
+    const systemPrompt = `
+You are a Curam expert assistant. You help users with IBM Curam-related questions across business analysis, functional design, technical architecture, workflows, evidence, eligibility, product delivery cases, integrated cases, testing, troubleshooting, and implementation best practices.
+
+Answer clearly and practically. When helpful:
+- explain Curam concepts in plain language
+- distinguish out-of-the-box behavior from customization
+- provide implementation-oriented guidance
+- mention uncertainty when behavior depends on the client configuration
+`;
+
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4.1-mini",
+      messages: [
+        { role: "system", content: systemPrompt },
+        ...messages,
+      ],
+      temperature: 0.3,
     });
 
-    console.log("Workflow result:", result);
+    const reply = completion.choices[0]?.message?.content || "No response generated.";
 
-    res.json({
-      markdown: result.formatted || "No formatted output returned.",
-      raw: result,
-    });
+    res.json({ reply });
   } catch (error) {
-    console.error("Workflow error:", error);
-
-    res.status(500).json({
-      error:
-        error instanceof Error ? error.message : "Unknown workflow error",
-    });
+    console.error(error);
+    res.status(500).json({ reply: "Server error." });
   }
 });
 
-app.listen(port, () => {
-  console.log(`Backend running at http://localhost:${port}`);
+app.listen(3001, () => {
+  console.log("Server running on port 3001");
 });
